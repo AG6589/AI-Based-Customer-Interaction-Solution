@@ -1,0 +1,13 @@
+User message: {{user_input}}
+
+Based on the user's message:
+1. Identify their background (student / working / career switch / unsure)
+2. Identify their goal (job, skills, mentorship, leadership, AI learning)
+3. Recommend the most suitable Iron Lady program
+4. Explain:
+   - Who the program is for
+   - What the user will gain
+   - Next step in the journey
+
+Keep the answer short, clear, and friendly.
+End with a guiding question to continue the conversation.
