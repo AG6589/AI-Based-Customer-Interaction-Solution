@@ -12,13 +12,11 @@ This repository delivers the AI-Based Customer Interaction Solution and Internal
 ```text
 iron-lady-ai-assignment/
 │
-├── task-1-ai-customer-assistant/   # 🤖 CUSTOMER-FACING CHATBOT
-│   ├── src/                        # React Application (Premium UI)
-│   ├── prompts/                    # Core AI Logic
-│   │   ├── system_prompt.txt       # Persona & Mission
-│   │   ├── user_flow_prompt.txt    # Conversation Logic
-│   │   └── fallback_prompt.txt     # Error Handling
-│   └── README.md                   # Instructions for Task 1
+├── task1-ai-assistant/             # 🤖 CUSTOMER-FACING CHATBOT
+│   └── ironlady-ai-assistant/      # React Application (Premium UI)
+│       ├── src/
+│       ├── .env                    # API Key configuration
+│       └── README.md
 │
 ├── task-2-internal-automation/      # ⚙️ FOLLOW-UP AUTOMATION
 │   ├── src/                        # Automation Scripts
@@ -36,10 +34,13 @@ iron-lady-ai-assignment/
 ### 🟢 Task 1: AI Program Guide Assistant
 *A premium chat interface for guiding users to the right program.*
 
-1.  **Navigate:** `cd task-1-ai-customer-assistant`
+1.  **Navigate:** `cd task1-ai-assistant/ironlady-ai-assistant`
 2.  **Install:** `npm install`
-3.  **Run:** `npm run dev`
-4.  **View:** Open `http://localhost:5173`
+3.  **Setup Keys:** Create a `.env` file and add `VITE_GROQ_API_KEY=your_key_here`
+4.  **Run:** `npm run dev`
+5.  **View:** Open `http://localhost:5173`
+
+> **Note:** The AI Assistant is powered by **Groq (Llama 3)** for ultra-fast responses. Ensure your API key is correct in the `.env` file.
 
 > **Demo Interaction:**
 > *   **User:** "I am a working professional and want to learn AI"
