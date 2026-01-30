@@ -91,11 +91,19 @@ function App() {
       setMessages(prev => [...prev, { role: 'ai', content: responseText }]);
 
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Gemini API Error Detail:", error);
       let errorMessage = "Sorry, something went wrong. Please check your connection.";
+
       if (error.message.includes("API Key missing")) {
         errorMessage = "⚠️ Missing API Key. Please update your environment variables.";
+      } else if (error.message.includes("API_KEY_INVALID")) {
+        errorMessage = "❌ Invalid API Key. Please check your Gemini API key.";
+      } else if (error.message.includes("SAFETY")) {
+        errorMessage = "🛡️ Content blocked by safety filters.";
+      } else if (error.message) {
+        errorMessage = `⚠️ AI Error: ${error.message.split('\n')[0]}`;
       }
+
       setMessages(prev => [...prev, { role: 'ai', content: errorMessage }]);
     } finally {
       setLoading(false);
