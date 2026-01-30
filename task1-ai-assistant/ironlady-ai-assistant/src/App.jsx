@@ -1,5 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import {
+  Send,
+  Sparkles,
+  GraduationCap,
+  Briefcase,
+  Rocket,
+  MessageSquare,
+  Menu,
+  X,
+  PlusCircle,
+  HelpCircle
+} from 'lucide-react';
 import './App.css';
 
 const SYSTEM_PROMPT = `You are Iron Lady AI Program Guide Assistant.
@@ -35,6 +47,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -81,7 +94,7 @@ function App() {
       console.error("Error:", error);
       let errorMessage = "Sorry, something went wrong. Please check your connection.";
       if (error.message.includes("API Key missing")) {
-        errorMessage = "⚠️ Missing API Key. Please create a .env file locally.";
+        errorMessage = "⚠️ Missing API Key. Please update your environment variables.";
       }
       setMessages(prev => [...prev, { role: 'ai', content: errorMessage }]);
     } finally {
@@ -90,52 +103,117 @@ function App() {
   };
 
   return (
-    <div className="main-container">
-      <div className="chat-card">
-        <header className="chat-header">
-          <h1>Iron Lady AI Assistant</h1>
+    <div className="app-layout">
+      {/* Mobile Header */}
+      <div className="mobile-nav">
+        <button onClick={() => setSidebarOpen(!sidebarOpen)}>
+          <Menu size={24} />
+        </button>
+        <h2>Iron Lady AI</h2>
+      </div>
+
+      {/* Sidebar */}
+      <aside className={`sidebar-container ${sidebarOpen ? 'mobile-open' : ''}`}>
+        <div className="sidebar-brand">
+          <Sparkles className="logo-sparkle" size={24} />
+          <h1>Iron Lady AI</h1>
+        </div>
+
+        <div className="status-badge">
+          <span className="pulse-dot"></span>
+          Assistant Online
+        </div>
+
+        <div className="sidebar-nav">
+          <div className="nav-card">
+            <GraduationCap className="card-icon" size={20} />
+            <h4>For Students</h4>
+            <p>Practical skills and job readiness programs designed for the next generation of women leaders.</p>
+          </div>
+
+          <div className="nav-card">
+            <Briefcase className="card-icon" size={20} />
+            <h4>For Professionals</h4>
+            <p>Leadership and advanced technology tracks to accelerate your career growth.</p>
+          </div>
+
+          <div className="nav-card">
+            <Rocket className="card-icon" size={20} />
+            <h4>Our Mission</h4>
+            <p>To empower 1 million women through technology and leadership development by 2030.</p>
+          </div>
+        </div>
+
+        <div className="sidebar-bottom">
+          <div className="help-info">
+            <HelpCircle size={16} />
+            <span>Need immediate help? Contact our support line for 1-on-1 counseling.</span>
+          </div>
+          <button className="help-action">Help</button>
+        </div>
+      </aside>
+
+      {/* Main Interface */}
+      <main className="content-area">
+        <header className="interface-header">
+          <h2>Program Guide Assistant</h2>
+          <p>Personalized guidance for your career journey</p>
         </header>
 
-        <div className="chat-body">
+        <section className="chat-window">
           {messages.length === 0 ? (
-            <div className="empty-state">
-              {/* Optional: Add initial message here or keep it blank as per image */}
+            <div className="welcome-session">
+              <div className="welcome-bubble">
+                <div className="robot-avatar">🤖</div>
+                <div className="bubble-text">
+                  <p>Hello! 😊 Welcome to Iron Lady. I'm your Program Guide Assistant. Whether you're a student, professional, or looking for a career change, I'm here to help you find the perfect path to join our mission of empowering women.</p>
+                  <p className="highlight">What can I help you with today?</p>
+                </div>
+              </div>
             </div>
           ) : (
-            <div className="messages-container">
+            <div className="messages-flow">
               {messages.map((msg, idx) => (
-                <div key={idx} className={`message-wrapper ${msg.role}`}>
-                  <div className="message-content">
+                <div key={idx} className={`flow-row ${msg.role}`}>
+                  <div className="flow-bubble">
                     {msg.content}
                   </div>
                 </div>
               ))}
               {loading && (
-                <div className="message-wrapper ai">
-                  <div className="message-content loading">
-                    AI is typing...
+                <div className="flow-row ai">
+                  <div className="flow-bubble typing">
+                    AI is preparing a response...
                   </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
           )}
-        </div>
+        </section>
 
-        <div className="chat-footer">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            disabled={loading}
-          />
-          <button onClick={handleSend} disabled={loading || !input.trim()}>
-            Send
-          </button>
-        </div>
-      </div>
+        <footer className="input-bar">
+          <div className="field-container">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask about programs, mentorship, or enrollment..."
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              disabled={loading}
+            />
+            <button className="submit-btn" onClick={handleSend} disabled={loading || !input.trim()}>
+              <Send size={18} />
+            </button>
+          </div>
+          <p className="legal-footer">
+            Empowering women through AI and Technology. Next batch starts soon!
+          </p>
+        </footer>
+      </main>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && <div className="overlay" onClick={() => setSidebarOpen(false)}></div>}
     </div>
   );
 }
