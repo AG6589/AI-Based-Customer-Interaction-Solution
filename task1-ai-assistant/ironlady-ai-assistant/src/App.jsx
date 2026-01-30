@@ -69,42 +69,39 @@ function App() {
     setInput('');
     setLoading(true);
 
+    // Get Groq API Key
+    const groqKey = import.meta.env.VITE_GROQ_API_KEY;
+
     try {
-      if (!apiKey) {
-        throw new Error("API Key missing. Please update your environment variables.");
+      if (!groqKey) {
+        throw new Error("Groq API Key missing. Please add VITE_GROQ_API_KEY to your .env file.");
       }
 
-      // v1.0.5 - Using gemini-1.0-pro for maximum compatibility
-      const chatHistory = [
-        { role: 'user', content: `SYSTEM INSTRUCTIONS: ${SYSTEM_PROMPT}` },
-        { role: 'assistant', content: "Understood. I will act as the Iron Lady Program Guide Assistant." },
-        ...updatedMessages
-      ];
-
-      const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=" + apiKey,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contents: chatHistory.map(msg => ({
-              role: msg.role === "assistant" || msg.role === "ai" ? "model" : "user",
-              parts: [{ text: msg.content }]
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${groqKey}`
+        },
+        body: JSON.stringify({
+          model: "llama3-8b-8192",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            ...updatedMessages.map(msg => ({
+              role: msg.role === "ai" ? "assistant" : "user",
+              content: msg.content
             }))
-          }),
-        }
-      );
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || `Groq API Error ${response.status}`);
+      }
 
       const data = await response.json();
-
-      if (!data.candidates) {
-        console.error("Gemini error:", data);
-        throw new Error(data.error?.message || "Could not generate response.");
-      }
-
-      const responseText = data.candidates[0].content.parts[0].text;
+      const responseText = data.choices[0]?.message?.content || "Sorry, I couldn't generate a response.";
 
       setMessages(prev => [...prev, { role: 'ai', content: responseText }]);
 
@@ -113,7 +110,7 @@ function App() {
       let errorMessage = "Sorry, something went wrong. ";
 
       if (error.message.includes("API Key missing")) {
-        errorMessage += "⚠️ Missing API Key.";
+        errorMessage += "⚠️ Missing Groq API Key.";
       } else {
         errorMessage += `⚠️ ${error.message.split('\n')[0]}`;
       }
