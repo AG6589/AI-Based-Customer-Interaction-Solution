@@ -358,6 +358,7 @@ body {
     position: fixed;
     height: 100vh;
     transform: translateX(-100%);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
   }
 
   .sidebar-container.mobile-open {
@@ -366,18 +367,73 @@ body {
 
   .mobile-nav {
     display: flex;
+    justify-content: flex-start;
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 60;
   }
 
-  .interface-header,
-  .chat-window,
-  .input-bar {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+  .mobile-nav h2 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .interface-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  .interface-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .interface-header p {
+    font-size: 0.85rem;
+  }
+
+  .chat-window {
+    padding: 0.5rem 1rem;
   }
 
   .welcome-bubble {
     padding: 1.5rem;
     flex-direction: column;
     text-align: center;
+    gap: 1rem;
+  }
+
+  .robot-avatar {
+    font-size: 2.5rem;
+  }
+
+  .bubble-text p {
+    font-size: 0.9rem;
+  }
+
+  .flow-bubble {
+    max-width: 90%;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.9rem;
+  }
+
+  .input-bar {
+    padding: 1rem;
+  }
+
+  .field-container {
+    padding-left: 1rem;
+  }
+
+  .field-container input {
+    font-size: 0.9rem;
+  }
+
+  .submit-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .legal-footer {
+    font-size: 0.7rem;
   }
 }
