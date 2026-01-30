@@ -76,13 +76,23 @@ function App() {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash",
-        systemInstruction: SYSTEM_PROMPT
       });
 
-      const history = messages.map(msg => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.content }]
-      }));
+      // Include system prompt instructions in the greeting or as part of history
+      const history = [
+        {
+          role: 'user',
+          parts: [{ text: `SYSTEM INSTRUCTIONS: ${SYSTEM_PROMPT}\n\nUnderstood. Please wait for the first user message.` }]
+        },
+        {
+          role: 'model',
+          parts: [{ text: "Understood. I am ready to assist as the Iron Lady Program Guide Assistant." }]
+        },
+        ...messages.map(msg => ({
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.content }]
+        }))
+      ];
 
       const chat = model.startChat({ history });
       const result = await chat.sendMessage(input);
