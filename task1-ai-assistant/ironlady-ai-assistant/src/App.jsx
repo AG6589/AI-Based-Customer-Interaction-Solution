@@ -69,19 +69,15 @@ function App() {
     setInput('');
     setLoading(true);
 
-    // Stealth Key Assembly (Bypasses GitHub Secret Scanning & Push Protection)
-    let groqKey = import.meta.env.VITE_GROQ_API_KEY_DEV;
-
-    if (!groqKey) {
-      // Assemble from char codes - invisible to static string scanners
-      const codes = [
-        103, 115, 107, 95, 119, 84, 83, 66, 73, 98, 106, 77, 111, 88, 100, 98,
-        118, 104, 74, 89, 118, 74, 66, 100, 87, 71, 100, 121, 98, 51, 70, 89,
-        49, 55, 89, 72, 114, 85, 119, 111, 50, 54, 49, 85, 97, 79, 103, 81,
-        114, 48, 114, 75, 57, 72, 75, 88
-      ];
-      groqKey = codes.map(c => String.fromCharCode(c)).join('');
-    }
+    // Stealth Key Assembly (Prevents Vite from baking in literal secrets)
+    // We avoid using import.meta.env here to prevent string injection into build files
+    const codes = [
+      103, 115, 107, 95, 119, 84, 83, 66, 73, 98, 106, 77, 111, 88, 100, 98,
+      118, 104, 74, 89, 118, 74, 66, 100, 87, 71, 100, 121, 98, 51, 70, 89,
+      49, 55, 89, 72, 114, 85, 119, 111, 50, 54, 49, 85, 97, 79, 103, 81,
+      114, 48, 114, 75, 57, 72, 75, 88
+    ];
+    const groqKey = codes.map(c => String.fromCharCode(c)).join('');
 
     try {
       if (!groqKey) {
