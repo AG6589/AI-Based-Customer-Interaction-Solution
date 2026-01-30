@@ -64,49 +64,59 @@ function App() {
     if (!input.trim()) return;
 
     const userMsg = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput('');
     setLoading(true);
 
     try {
       if (!apiKey) {
-        throw new Error("API Key missing. Please add VITE_GEMINI_API_KEY to your .env file.");
+        throw new Error("API Key missing. Please update your environment variables.");
       }
 
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      // Preparation of chat history including the system prompt for context
+      const chatHistory = [
+        { role: 'user', content: `SYSTEM INSTRUCTIONS: ${SYSTEM_PROMPT}` },
+        { role: 'assistant', content: "Understood. I will act as the Iron Lady Program Guide Assistant." },
+        ...updatedMessages
+      ];
 
-      // Build context by joining history with the current message
-      const historyContext = messages.map(msg =>
-        `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
-      ).join('\n');
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: chatHistory.map(msg => ({
+              role: msg.role === "assistant" || msg.role === "ai" ? "model" : "user",
+              parts: [{ text: msg.content }]
+            }))
+          }),
+        }
+      );
 
-      const fullPrompt = `
-${SYSTEM_PROMPT}
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
+      }
 
-Conversation History:
-${historyContext}
-
-User: ${input}
-Assistant:`;
-
-      const result = await model.generateContent(fullPrompt);
-      const responseText = result.response.text();
+      const data = await response.json();
+      const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
 
       setMessages(prev => [...prev, { role: 'ai', content: responseText }]);
 
     } catch (error) {
-      console.error("Gemini API Error Detail:", error);
-      let errorMessage = "Sorry, something went wrong. Please check your connection.";
+      console.error("AI Assistant Error:", error);
+      let errorMessage = "Sorry, something went wrong. ";
 
       if (error.message.includes("API Key missing")) {
-        errorMessage = "⚠️ Missing API Key. Please update your environment variables.";
+        errorMessage += "⚠️ Missing API Key.";
       } else if (error.message.includes("API_KEY_INVALID")) {
-        errorMessage = "❌ Invalid API Key. Please check your Gemini API key.";
-      } else if (error.message.includes("SAFETY")) {
-        errorMessage = "🛡️ Content blocked by safety filters.";
-      } else if (error.message) {
-        errorMessage = `⚠️ AI Error: ${error.message.split('\n')[0]}`;
+        errorMessage += "❌ Invalid API Key.";
+      } else {
+        errorMessage += `⚠️ ${error.message.split('\n')[0]}`;
       }
 
       setMessages(prev => [...prev, { role: 'ai', content: errorMessage }]);
