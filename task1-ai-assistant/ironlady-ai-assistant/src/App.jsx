@@ -1,15 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import {
-  Send,
-  Sparkles,
-  GraduationCap,
-  Briefcase,
-  Rocket,
-  MessageSquare,
-  Menu,
-  X
-} from 'lucide-react';
 import './App.css';
 
 const SYSTEM_PROMPT = `You are Iron Lady AI Program Guide Assistant.
@@ -45,7 +35,6 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -101,86 +90,30 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      {/* Mobile Menu Toggle */}
-      <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-        {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-header">
-          <Sparkles className="logo-icon" size={28} />
-          <h1>Iron Lady AI</h1>
-        </div>
-
-        <div className="status-indicator">
-          <span className="dot"></span>
-          Assistant Online
-        </div>
-
-        <div className="sidebar-cards">
-          <div className="info-card">
-            <div className="card-icon"><GraduationCap size={20} /></div>
-            <h3>For Students</h3>
-            <p>Practical skills and job readiness programs designed for the next generation of women leaders.</p>
-          </div>
-
-          <div className="info-card">
-            <div className="card-icon"><Briefcase size={20} /></div>
-            <h3>For Professionals</h3>
-            <p>Leadership and advanced technology tracks to accelerate your career growth.</p>
-          </div>
-
-          <div className="info-card">
-            <div className="card-icon"><Rocket size={20} /></div>
-            <h3>Our Mission</h3>
-            <p>To empower 1 million women through technology and leadership development by 2030.</p>
-          </div>
-        </div>
-
-        <div className="sidebar-footer">
-          <p>ℹ️ Need immediate help? Contact our support line for 1-on-1 counseling.</p>
-          <button className="help-btn">Help</button>
-        </div>
-      </aside>
-
-      {/* Main Chat Area */}
-      <main className="chat-interface">
-        <header className="main-header">
-          <h2>Program Guide Assistant</h2>
-          <p>Personalized guidance for your career journey</p>
+    <div className="main-container">
+      <div className="chat-card">
+        <header className="chat-header">
+          <h1>Iron Lady AI Assistant</h1>
         </header>
 
-        <div className="chat-messages-area">
+        <div className="chat-body">
           {messages.length === 0 ? (
-            <div className="welcome-card">
-              <div className="welcome-header">
-                <MessageSquare className="welcome-icon" size={24} />
-                <h3>Hello! 👋</h3>
-              </div>
-              <p>
-                Welcome to Iron Lady. I'm your Program Guide Assistant. Whether you're a student,
-                professional, or looking for a career change, I'm here to help you find the
-                perfect path to join our mission of empowering women.
-              </p>
-              <p className="prompt-text">What can I help you with today?</p>
+            <div className="empty-state">
+              {/* Optional: Add initial message here or keep it blank as per image */}
             </div>
           ) : (
-            <div className="messages-list">
+            <div className="messages-container">
               {messages.map((msg, idx) => (
-                <div key={idx} className={`message-row ${msg.role}`}>
-                  <div className="message-bubble">
+                <div key={idx} className={`message-wrapper ${msg.role}`}>
+                  <div className="message-content">
                     {msg.content}
                   </div>
                 </div>
               ))}
               {loading && (
-                <div className="message-row ai">
-                  <div className="message-bubble loading">
-                    <span className="dot-anim">.</span>
-                    <span className="dot-anim">.</span>
-                    <span className="dot-anim">.</span>
+                <div className="message-wrapper ai">
+                  <div className="message-content loading">
+                    AI is typing...
                   </div>
                 </div>
               )}
@@ -189,25 +122,20 @@ function App() {
           )}
         </div>
 
-        <div className="input-section">
-          <div className="input-wrapper">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about programs, mentorship, or enrollment..."
-              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-              disabled={loading}
-            />
-            <button onClick={handleSend} disabled={loading || !input.trim()} className="send-btn">
-              <Send size={20} />
-            </button>
-          </div>
-          <p className="footer-copyright">
-            Empowering women through AI and Technology. Next batch starts soon!
-          </p>
+        <div className="chat-footer">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type a message..."
+            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            disabled={loading}
+          />
+          <button onClick={handleSend} disabled={loading || !input.trim()}>
+            Send
+          </button>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
