@@ -82,7 +82,7 @@ function App() {
       ];
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`,
+        "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=" + apiKey,
         {
           method: "POST",
           headers: {
@@ -97,13 +97,14 @@ function App() {
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || `API Error ${response.status}: ${response.statusText}`);
+      const data = await response.json();
+
+      if (!data.candidates) {
+        console.error("Gemini error:", data);
+        throw new Error(data.error?.message || "Could not generate response.");
       }
 
-      const data = await response.json();
-      const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+      const responseText = data.candidates[0].content.parts[0].text;
 
       setMessages(prev => [...prev, { role: 'ai', content: responseText }]);
 
