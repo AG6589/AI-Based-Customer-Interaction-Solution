@@ -74,13 +74,13 @@ function App() {
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      // Using standard model name, explicit version check
+      // Switched to gemini-pro for broader compatibility and endpoint stability
       const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
+        model: "gemini-pro",
       });
 
       // Include system prompt instructions in the greeting or as part of history
-      // Fix version: 1.0.2 (Force cache refresh)
+      // Fix version: 1.0.3 (Model Switch to gemini-pro)
       const history = [
         {
           role: 'user',
