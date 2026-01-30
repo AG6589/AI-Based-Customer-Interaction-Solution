@@ -74,11 +74,13 @@ function App() {
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
+      // Using standard model name, explicit version check
       const model = genAI.getGenerativeModel({
         model: "gemini-1.5-flash",
       });
 
       // Include system prompt instructions in the greeting or as part of history
+      // Fix version: 1.0.2 (Force cache refresh)
       const history = [
         {
           role: 'user',
