@@ -74,7 +74,7 @@ function App() {
         throw new Error("API Key missing. Please update your environment variables.");
       }
 
-      // Preparation of chat history including the system prompt for context
+      // v1.0.5 - Using gemini-1.0-pro for maximum compatibility
       const chatHistory = [
         { role: 'user', content: `SYSTEM INSTRUCTIONS: ${SYSTEM_PROMPT}` },
         { role: 'assistant', content: "Understood. I will act as the Iron Lady Program Guide Assistant." },
@@ -82,7 +82,7 @@ function App() {
       ];
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: {
@@ -99,7 +99,7 @@ function App() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
+        throw new Error(errorData.error?.message || `API Error ${response.status}: ${response.statusText}`);
       }
 
       const data = await response.json();
@@ -108,13 +108,11 @@ function App() {
       setMessages(prev => [...prev, { role: 'ai', content: responseText }]);
 
     } catch (error) {
-      console.error("AI Assistant Error:", error);
+      console.error("AI Assistant Error Detail:", error);
       let errorMessage = "Sorry, something went wrong. ";
 
       if (error.message.includes("API Key missing")) {
         errorMessage += "⚠️ Missing API Key.";
-      } else if (error.message.includes("API_KEY_INVALID")) {
-        errorMessage += "❌ Invalid API Key.";
       } else {
         errorMessage += `⚠️ ${error.message.split('\n')[0]}`;
       }
