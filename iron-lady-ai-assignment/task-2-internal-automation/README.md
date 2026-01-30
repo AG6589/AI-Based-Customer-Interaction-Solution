@@ -1,21 +1,32 @@
-# Task 2: Internal Automation
-## Follow-up AI Assistant
+# Task 2: Internal Automation (CRM AI)
 
-This component focuses on internal operations, specifically automating the re-engagement process for potential leads.
+## 🎯 Iron Lady Follow-up AI Assistant
 
-### Features
-- **Automated Re-engagement**: Uses user interaction history to generate personalized follow-up messages.
-- **Tone Consistency**: Ensures all communications align with Iron Lady's warm and empowering brand voice.
-- **Conversion Focused**: Provides clear call-to-actions to move "stalled" leads further down the enrollment funnel.
+This tool automates the re-engagement process for women who have shown interest in Iron Lady programs but haven't enrolled. It uses a **"Strong Persona"** AI to generate warm, professional, and conversion-focused messages suitable for WhatsApp or Email.
 
-### Structure
-- `prompts/`: 
-  - `followup_ai_prompt.txt`: The template used to generate re-engagement messages.
-- `src/`: 
-  - `followup_automation.js`: A demonstration script showing how the AI can process leads.
+### ✨ Key Features
+- **Strong Persona Rule**: The AI never badgers; it asks *once* and offers *one* clear next step.
+- **Context-Aware**: Uses the prospect's background and history to personalize the message.
+- **Empowerment Focused**: Tone is always encouraging ("Antigravity" style).
 
-### Usage
-This is designed to be integrated into a CRM or email automation system. You can run the demonstration script using Node:
-```bash
-node src/followup_automation.js
+### 📂 Structure
+- `prompts/followup_ai_prompt.txt`: The **System Prompt** defining the Iron Lady persona and strict rules.
+- `src/followup_automation.js`: Node.js script simulating how a CRM would use this prompt to generate messages for a list of leads.
+
+### 🚀 How to Run the Demo
+1. Open this folder in your terminal.
+2. Run the automation script:
+   ```bash
+   node src/followup_automation.js
+   ```
+
+### 🧠 Logic Explanation
+The script reads user data and constructs a context block:
+```javascript
+const promptData = `
+Previous interest: AI Career Transition Program
+Last step taken: Viewed program details but did not enroll
+Background: Non-technical professional with 3 years experience
+`;
 ```
+This context is sent along with the robust System Prompt to the AI, ensuring high-quality, non-repetitive outputs.

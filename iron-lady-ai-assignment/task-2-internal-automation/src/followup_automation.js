@@ -1,42 +1,88 @@
 /**
  * Task 2: Internal Automation - Follow-up AI
- * This script demonstrates how the followup_ai_prompt.txt can be used
- * to automate re-engagement with potential candidates.
+ * 
+ * This script demonstrates the "Antigravity" prompt structure for generating
+ * high-quality, re-engagement messages for leads.
+ * 
+ * In a real-world scenario, this functions as the logic layer that:
+ * 1. Fetches "stalled" leads from a CRM/Database.
+ * 2. Formats the user context.
+ * 3. Sends the prompt + context to an AI (like Google Gemini).
  */
 
-const generateFollowUpMessage = (userData) => {
-    const { name, previousInterest, lastStep, daysSinceLastContact } = userData;
+const fs = require('fs');
+const path = require('path');
 
-    // Simulate prompt injection
-    const prompt = `
-    You are the Iron Lady Follow-up AI.
-    User: ${name}
-    Interested in: ${previousInterest}
-    Last Step: ${lastStep}
-    Days since: ${daysSinceLastContact}
-    
-    Task: Write a warm, professional follow-up message encouraging them to take the next step.
-  `;
-
-    console.log("--- Generating Follow-up for", name, "---");
-
-    // Simulated AI Output
-    if (lastStep === 'visited website') {
-        return `Hi ${name}, we noticed you explored our ${previousInterest} page! Many women in your position find our mentorship sessions life-changing. Would you like a 10-minute discovery call?`;
-    } else if (lastStep === 'spoke to counselor') {
-        return `Hi ${name}, it was great having you speak with our counselor! We're ready to help you start your journey in ${previousInterest}. The next cohort starts soon—would you like to see the enrollment details?`;
-    }
-
-    return `Hi ${name}, we're still here to support your career growth with ${previousInterest}. Let us know if you have any questions!`;
+// 🔧 FUNCTION: Load the System Prompt from file
+const getSystemPrompt = () => {
+    const promptPath = path.join(__dirname, '../prompts/followup_ai_prompt.txt');
+    return fs.readFileSync(promptPath, 'utf8');
 };
 
-// Example Usage
+// 🔧 FUNCTION: Simulate AI Generation (with Mock Output for Demo)
+const generateFollowUpMessage = (lead, systemPrompt) => {
+
+    // 1️⃣ Construct the Context Block as requested by the prompt engineering rules
+    const contextBlock = `
+Previous interest: ${lead.previousInterest}
+Last step taken: ${lead.lastStep}
+Background: ${lead.background || 'Not specified'}
+  `;
+
+    console.log("---------------------------------------------------------");
+    console.log(`🟢 GENERATING MESSAGE FOR: ${lead.name}`);
+    console.log("📝 Context Sent to AI:");
+    console.log(contextBlock.trim());
+    console.log("---------------------------------------------------------");
+
+    // In a real app, you would do:
+    // const response = await gemini.generateContent(systemPrompt + "\n\n" + contextBlock);
+
+    // Here, we simulate the "expected output" based on the prompt's strong examples
+
+    if (lead.previousInterest.includes('Career')) {
+        return `Hi ${lead.name}, 
+
+We noticed you were exploring our ${lead.previousInterest}. 
+It is designed specifically for professionals like you who are looking to move into tech roles but might be worried about the learning curve.
+Many of our alumni felt the same way initially, but our structured mentorship ensures you succeed.
+A short 10-minute counseling call can help you visualize your personal roadmap.
+Would you like us to schedule a quick chat this week?`;
+    }
+
+    return `Hi ${lead.name}, 
+
+We noticed you showed interest in the ${lead.previousInterest}.
+We understand that committing to a new path can feel daunting, especially with a busy schedule.
+However, our program is built to fit into the lives of working women, offering flexible support.
+A quick 10-minute conversation with a mentor could clarify how this fits into your career goals.
+Are you open to a brief call to discuss this further?`;
+};
+
+// 🔧 DEMO DATA: Stalled Leads
 const leads = [
-    { name: 'Priya', previousInterest: 'AI for Beginners', lastStep: 'visited website', daysSinceLastContact: 3 },
-    { name: 'Ananya', previousInterest: 'Leadership Track', lastStep: 'spoke to counselor', daysSinceLastContact: 5 }
+    {
+        name: 'Priya',
+        previousInterest: 'AI Career Transition Program',
+        lastStep: 'Viewed program details but did not enroll',
+        background: 'Non-technical professional with 3 years experience'
+    },
+    {
+        name: 'Ananya',
+        previousInterest: 'Iron Lady Leadership Track',
+        lastStep: 'Spoke to counselor but stopped replying',
+        background: 'Mid-level manager looking for promotion'
+    }
 ];
 
+// MAIN EXECUTION
+const systemPrompt = getSystemPrompt();
+
+console.log("\n🔹 SYSTEM PROMPT LOADED");
+
 leads.forEach(lead => {
-    console.log(generateFollowUpMessage(lead));
-    console.log('-----------------------------------');
+    const message = generateFollowUpMessage(lead, systemPrompt);
+    console.log("🤖 AI RESPONSE (Simulated):");
+    console.log(message);
+    console.log("\n");
 });
