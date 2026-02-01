@@ -2,6 +2,8 @@
 
 https://drive.google.com/drive/folders/1LFLUgbb6KIfD44Grp_KOiQ7_KbSyg6dC?usp=sharing
 
+https://docs.google.com/document/d/1j7ZaGmNUagl-rkqm2vPXQMuoIBnGtGyhMATh1zGTSAc/edit?usp=sharing
+
 ## 📌 Project Overview
 This repository delivers the AI-Based Customer Interaction Solution and Internal Automation tools designed for the **Iron Lady** platform.
 
