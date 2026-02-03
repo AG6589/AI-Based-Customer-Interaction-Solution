@@ -64,6 +64,17 @@ iron-lady-ai-assignment/
 *   **Responsive Design:** Works seamlessly on Desktop and Mobile.
 *   **Conversion Focus:** Always guides users to the next step (Counseling/Enrollment).
 
+*   <img width="1910" height="814" alt="image" src="https://github.com/user-attachments/assets/3c91f14a-8435-433a-9845-50b2796a034e" />
+<img width="1919" height="816" alt="image" src="https://github.com/user-attachments/assets/e3fc0072-e984-415d-b66f-38a6e548f1d0" />
+<img width="1919" height="827" alt="image" src="https://github.com/user-attachments/assets/85fc227d-f3df-46fb-8de6-26888b367c13" />
+<img width="1919" height="813" alt="image" src="https://github.com/user-attachments/assets/3fcaf99a-4b45-4fd4-8331-80a917f81cf9" />
+<img width="1919" height="817" alt="image" src="https://github.com/user-attachments/assets/b7cfdd50-35e1-4256-8bf7-aca156527388" />
+
+
+
+
+
+
 ---
 https://ag6589.github.io/AI-Based-Customer-Interaction-Solution/
 *Developed for the Iron Lady AI Assignment.*
